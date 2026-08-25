@@ -7,7 +7,7 @@ function App(){
     <div>
       <LateralBar/>
 
-      <main>
+      <main className="ml-64 min-h-screen flex justify-center p-8">
         <Outlet/>
       </main>
     </div>

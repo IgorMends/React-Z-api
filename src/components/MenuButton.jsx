@@ -1,7 +1,8 @@
 function MenuButton(props){
     return(
         <button
-            className="flex h-12 w-full items-center pl-5 bg-slate-900 text-white shadow-lg transition-all duration-200 hover:scale-105 hover:bg-slate-800 font-outfit font-bold
+            onClick={props.onClick}
+            className="flex h-10 w-full items-center pl-5 bg-slate-900 text-white shadow-lg tracking-[0.005em] transition-all duration-200 hover:scale-105 hover:font-medium hover:tracking-[0.25em]  hover:bg-slate-800 font-outfit font-bold
             hover:cursor-pointer">
                 {props.name}
         </button>
