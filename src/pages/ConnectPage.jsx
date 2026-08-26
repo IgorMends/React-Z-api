@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import Field from "../components/Field";
 
 function ConnectPage() {
   const [form, setForm] = useState({ name: "", id: "", token: "", clientToken: "" });
@@ -10,15 +11,21 @@ function ConnectPage() {
   const handleChange = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      // chamada real ao seu backend aqui
-      console.log("Salvando credenciais:", form);
-    } finally {
-      setSaving(false);
-    }
-  };
+  async function saveInstance(instanceId, instanceToken, clientToken){
+    setSaving(true)
+    const res = await fetch(`http://localhost:8080/instance/${instanceId}/token/${instanceToken}/me`, {
+      method: "GET",
+      headers:  {
+        "Content-Type": "application/json",
+        "Client-Token": clientToken
+      }  
+    })
+
+    const data = await res.json()
+    console.log(data)
+    setSaving(false)
+    return data
+  }
 
   return (
     <div className="relative">
@@ -89,7 +96,7 @@ function ConnectPage() {
         />
 
         <button
-          onClick={handleSave}
+          onClick={() => {saveInstance(form.id, form.token, form.clientToken)}}
           disabled={saving}
           className="mt-4 w-full rounded-xl bg-zinc-950 px-6 py-3.5 font-satoshi text-sm font-semibold uppercase tracking-[0.15em] text-white transition-colors hover:cursor-pointer hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
@@ -100,28 +107,6 @@ function ConnectPage() {
   );
 }
 
-function Field({ label, value, onChange, placeholder, type = "text", trailingIcon }) {
-  return (
-    <label className="block">
-      <span className="mb-2 block font-satoshi text-xs font-semibold uppercase tracking-[0.2em] text-zinc-400">
-        {label}
-      </span>
-      <div className="relative">
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3.5 pr-11 font-satoshi text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-300 focus:border-zinc-950/40 focus:ring-4 focus:ring-zinc-950/5"
-        />
-        {trailingIcon && (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3.5">
-            {trailingIcon}
-          </div>
-        )}
-      </div>
-    </label>
-  );
-}
+
 
 export default ConnectPage;
